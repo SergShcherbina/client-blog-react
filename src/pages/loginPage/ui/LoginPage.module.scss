@@ -1,0 +1,7 @@
+.root {
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 0 10px;
+  background: radial-gradient(circle, rgba(255,255,255,1) 30%, rgba(184,189,199,1) 100%, rgba(0,0,0,1) 100%);
+}

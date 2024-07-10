@@ -1,0 +1,38 @@
+.link {
+  position: relative;
+  transition: color 0.2s, width 0.2s;
+  display: inline-block;
+
+  &:after, &:before{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    width: 0;
+    background-color: var(--color-medium);
+    transition: width 0.2s;
+  }
+
+  &:after{
+    left: 50%;
+  }
+
+  &:before{
+    right: 50%;
+  }
+
+  &:hover:after, &:hover:before {
+    width: 50%;
+    transition: width 0.2s;
+  }
+
+  &:active{
+    color: var(--color-medium);
+    transition: color 0.2s;
+  }
+}
+
+.active {
+  color: var(--color-medium);
+  transition: color 0.2s;
+}
