@@ -6,20 +6,20 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ControlledInputPassword, CustomLink, Path } from "../../../shared";
-import { schema } from "../model/validationSchema";
-import s from "./LoginForm.module.scss";
+import { signUpSchema } from "../model/signUpSchema.ts";
+import s from "./SignUp.module.scss";
 
-type FormDataType = z.infer<typeof schema>;
+type SignUpType = z.infer<typeof signUpSchema>;
 
-export const LoginForm = () => {
+export const SignUp = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormDataType>({ resolver: zodResolver(schema) });
+  } = useForm<SignUpType>({ resolver: zodResolver(signUpSchema) });
 
   const onSubmit = (data: FormDataType) => {
-    console.log("LoginForm:", data);
+    console.log("SignUp:", data);
   };
 
   return (
@@ -47,6 +47,13 @@ export const LoginForm = () => {
           errorMessage={errors.password?.message}
         />
 
+        <ControlledInputPassword
+          name={"confirmPassword"}
+          label={"Повторите пароль"}
+          control={control}
+          errorMessage={errors.confirmPassword?.message}
+        />
+
         <Button
           color={"primary"}
           variant={"contained"}
@@ -57,8 +64,8 @@ export const LoginForm = () => {
         </Button>
 
         <div>
-          <Typography component="span"> {"Ещё нет аккаунта?"} </Typography>
-          <CustomLink to={Path.SIGNUP}>{"Зарегистрироваться"}</CustomLink>
+          <Typography component="span"> {"Уже зарегистрированы?"} </Typography>
+          <CustomLink to={Path.LOGIN}>{"Войти"}</CustomLink>
         </div>
       </form>
     </div>

@@ -1,0 +1,8 @@
+.root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 10px;
+  background: radial-gradient(circle, rgba(255,255,255,1) 30%, rgba(184,189,199,1) 100%, rgba(0,0,0,1) 100%);
+}

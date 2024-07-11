@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 
-import { Layout } from "../../pages";
+import { Layout, SignUpPage } from "../../pages";
 import { LoginPage } from "../../pages";
 import { Path } from "../../shared";
 
@@ -19,7 +19,7 @@ export const router: ReturnType<typeof createBrowserRouter> =
             },
             {
               path: Path.POST,
-              element: <h1>{"Post Page"}</h1>,
+              element: <h1>{"My post Page"}</h1>,
             },
             {
               path: Path.ADD_POST,
@@ -39,7 +39,7 @@ export const router: ReturnType<typeof createBrowserRouter> =
     },
     {
       path: Path.SIGNUP,
-      element: <h1>SIGN UP Page</h1>,
+      element: <SignUpPage />,
     },
     {
       path: Path.NOT_FOUND,
