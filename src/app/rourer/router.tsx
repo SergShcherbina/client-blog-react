@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 
 import { Layout, SignUpPage } from "../../pages";
 import { LoginPage } from "../../pages";
-import { Path } from "../../shared";
+import {Path} from "../../shared";
 
 export const router: ReturnType<typeof createBrowserRouter> =
   createBrowserRouter([
@@ -48,6 +48,7 @@ export const router: ReturnType<typeof createBrowserRouter> =
   ]);
 
 function PrivateRoutes() {
+  // const isAuthenticated = useAppSelector(userSelectors.isLoggedInSelectors);
   const isAuthenticated = true;
 
   return isAuthenticated ? <Outlet /> : <Navigate to={Path.LOGIN} />;
