@@ -1,25 +1,51 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import { useNavigate } from "react-router-dom";
 
-import { ControlledInputPassword, CustomLink, Path } from "../../../shared";
-import { signUpSchema } from "../model/signUpSchema.ts";
+import { signUpThunk, userSelectors } from "../../../../entites";
+import {
+  ControlledInputPassword,
+  CustomAlert,
+  CustomLink,
+  Path,
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../shared";
+import type { SignUpFormType } from "../../model";
+import { signUpValidationSchema } from "../../model/";
 import s from "./SignUp.module.scss";
 
-type SignUpType = z.infer<typeof signUpSchema>;
-
 export const SignUp = () => {
+  const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const errorMessageFromServer = useAppSelector(
+    userSelectors.authErrorSelectors,
+  );
+
   const {
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm<SignUpType>({ resolver: zodResolver(signUpSchema) });
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<SignUpFormType>({
+    resolver: zodResolver(signUpValidationSchema),
+  });
 
-  const onSubmit = (data: FormDataType) => {
-    console.log("SignUp:", data);
+  const onSubmit = (data: SignUpFormType) => {
+    const { email, password } = data;
+    //чтобы работала isSubmitting нужно возвращать promise
+    return dispatch(signUpThunk({ email, password }))
+      .unwrap()
+      .then(() => {
+        navigate(Path.LOGIN);
+      })
+      .catch(() => {
+        setOpen(true);
+      });
   };
 
   return (
@@ -55,12 +81,13 @@ export const SignUp = () => {
         />
 
         <Button
-          color={"primary"}
+          color={isSubmitting ? "success" : "primary"}
           variant={"contained"}
           size={"large"}
           type={"submit"}
+          disabled={!isValid || isSubmitting}
         >
-          {"Войти"}
+          {"Зарегистрироваться"}
         </Button>
 
         <div>
@@ -68,6 +95,13 @@ export const SignUp = () => {
           <CustomLink to={Path.LOGIN}>{"Войти"}</CustomLink>
         </div>
       </form>
+
+      <CustomAlert
+        open={open}
+        onClose={() => setOpen(false)}
+        severity={"error"}
+        message={errorMessageFromServer}
+      />
     </div>
   );
 };

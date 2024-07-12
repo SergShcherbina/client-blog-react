@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const schema = z
+export const loginValidationSchema = z
   .object({
     email: z.string().email({ message: "Неверная почта" }),
     password: z

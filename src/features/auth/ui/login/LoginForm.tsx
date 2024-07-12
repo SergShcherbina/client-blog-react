@@ -1,25 +1,47 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import { useNavigate } from "react-router-dom";
 
-import { ControlledInputPassword, CustomLink, Path } from "../../../shared";
-import { schema } from "../model/validationSchema";
+import { loginThunk, userSelectors } from "../../../../entites";
+import {
+  ControlledInputPassword,
+  CustomAlert,
+  CustomLink,
+  Path,
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../shared";
+import type { LoginFormType } from "../../model";
+import { loginValidationSchema } from "../../model";
 import s from "./LoginForm.module.scss";
 
-type FormDataType = z.infer<typeof schema>;
-
 export const LoginForm = () => {
+  const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const errorMessageFromServer = useAppSelector(
+    userSelectors.authErrorSelectors,
+  );
+  const navigate = useNavigate();
+
   const {
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormDataType>({ resolver: zodResolver(schema) });
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<LoginFormType>({ resolver: zodResolver(loginValidationSchema) });
 
-  const onSubmit = (data: FormDataType) => {
-    console.log("LoginForm:", data);
+  const onSubmit = async (data: LoginFormType) => {
+    await dispatch(loginThunk(data))
+      .unwrap()
+      .then(() => {
+        navigate(Path.MAIN);
+      })
+      .catch(() => {
+        setOpen(true);
+      });
   };
 
   return (
@@ -52,6 +74,7 @@ export const LoginForm = () => {
           variant={"contained"}
           size={"large"}
           type={"submit"}
+          disabled={!isValid || isSubmitting}
         >
           {"Войти"}
         </Button>
@@ -61,6 +84,13 @@ export const LoginForm = () => {
           <CustomLink to={Path.SIGNUP}>{"Зарегистрироваться"}</CustomLink>
         </div>
       </form>
+
+      <CustomAlert
+        open={open}
+        onClose={() => setOpen(false)}
+        severity={"error"}
+        message={errorMessageFromServer}
+      />
     </div>
   );
 };

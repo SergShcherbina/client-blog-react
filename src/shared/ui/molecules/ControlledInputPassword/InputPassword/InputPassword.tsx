@@ -7,6 +7,7 @@ import {
   InputAdornment,
   InputLabel,
 } from "@mui/material";
+import type { FilledInputProps } from "@mui/material/FilledInput/FilledInput";
 import IconButton from "@mui/material/IconButton";
 import { ChangeEventHandler, FC, useState } from "react";
 import { Noop } from "react-hook-form";
@@ -14,18 +15,16 @@ import { Noop } from "react-hook-form";
 export type IPropsInputPassword = {
   name: string;
   label?: string;
-  // ref: RefCallBack;
   onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   value: string;
   onBlur?: Noop;
   errorMessage?: string;
   defaultValue?: string;
-};
+} & FilledInputProps;
 
 export const InputPassword: FC<IPropsInputPassword> = ({
   label,
   errorMessage,
-  defaultValue = "",
   ...rest
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,14 +32,16 @@ export const InputPassword: FC<IPropsInputPassword> = ({
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   return (
-    <FormControl sx={{ m: 1, width: "25ch" }} variant="filled">
-      <InputLabel htmlFor="filled-adornment-password" error={!!errorMessage}>
+    <FormControl variant="filled">
+      <InputLabel
+        htmlFor={`filled-adornment-${rest.name}`}
+        error={!!errorMessage}
+      >
         {label}
       </InputLabel>
       <FilledInput
         {...rest}
-        defaultValue={defaultValue}
-        id="filled-adornment-password"
+        id={`filled-adornment-${rest.name}`}
         type={showPassword ? "text" : "password"}
         error={!!errorMessage}
         endAdornment={
@@ -56,7 +57,10 @@ export const InputPassword: FC<IPropsInputPassword> = ({
         }
         // label={label}
       />
-      <FormHelperText id="filled-adornment-password" error={!!errorMessage}>
+      <FormHelperText
+        id={`filled-adornment-${rest.name}`}
+        error={!!errorMessage}
+      >
         {errorMessage?.toString()}
       </FormHelperText>
     </FormControl>

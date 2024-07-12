@@ -4,7 +4,7 @@ import Alert from "@mui/material/Alert";
 type Props = {
   open: boolean;
   severity: "success" | "info" | "warning" | "error";
-  text?: string;
+  message: string | null;
   onClose: () => void;
   duration?: number;
 };
@@ -13,13 +13,13 @@ export const CustomAlert = ({
   open,
   severity,
   onClose,
-  text = "some error",
+  message = "some error",
   duration = 5000,
 }: Props) => {
   return (
     <Snackbar open={open} autoHideDuration={duration} onClose={onClose}>
       <Alert variant="outlined" severity={severity}>
-        {text}
+        {message}
       </Alert>
     </Snackbar>
   );
